@@ -4,7 +4,7 @@
  <title></title>
  <link href="http://cbio.ensmp.fr/~mmoarii/atom.xml" rel="self"/>
  <link href="http://cbio.ensmp.fr/~mmoarii/"/>
- <updated>2014-08-01T14:20:39+02:00</updated>
+ <updated>2015-05-21T17:21:33+02:00</updated>
  <id>http://cbio.ensmp.fr/~mmoarii</id>
  <author>
    <name>Matahi MOARII</name>
@@ -13,10 +13,156 @@
 
  
  <entry>
+   <title>bio-info, SVM and Graph-kernels</title>
+   <link href="http://cbio.ensmp.fr/~mmoarii/2015-05-22/Bioinfo-SVM-Graph-Kernels.html"/>
+   <updated>2015-05-22T00:00:00+02:00</updated>
+   <id>http://cbio.ensmp.fr/~mmoarii/2015-05-22/Bioinfo-SVM-Graph-Kernels</id>
+   <content type="html">&lt;h1&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;This page is the practical session of the &amp;quot;Machine Learning for Computational Biology&amp;quot; module taught by &lt;a href=&quot;http://cbio.ensmp.fr/jvert&quot;&gt;Jean-Philippe Vert&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1&gt;Material&lt;/h1&gt;
+
+&lt;p&gt;The practical session is done using &lt;a href=&quot;http://cran.r-project.org&quot;&gt;R&lt;/a&gt;. For a quick tutorial, follow this &lt;a href=&quot;http://pages.pomona.edu/%7Ejsh04747/courses/R.pdf&quot;&gt;link&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1&gt;Practical Session&lt;/h1&gt;
+
+&lt;h2&gt;Necessary support:&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The lecture &lt;a href=&quot;http://cbio.ensmp.fr/%7Ejvert/talks/110401mines/mines.pdf&quot;&gt;slides&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;The practical session R and the datasets &lt;a href=&quot;http://matahi.github.io/downloads/TP_Mines_2015.zip&quot;&gt;file&lt;/a&gt; &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Part A: Linear dataset.&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;A.1/A.2)&lt;/strong&gt; Visualization of the first dataset:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kp&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;linear1.RData&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;3 new variables are in the environment now (type &lt;code&gt;ls()&lt;/code&gt; to check):&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;linear1.train : a matrix of size n1x3 (first column is &lt;em&gt;x1&lt;/em&gt;, second column is &lt;em&gt;x2&lt;/em&gt; and third column is the output &lt;em&gt;y&lt;/em&gt;). &lt;/li&gt;
+&lt;li&gt;linear1.test.input : a matrix of size n2 x 2 (same as the train but without the output &lt;em&gt;y&lt;/em&gt;).&lt;/li&gt;
+&lt;li&gt;linear1.data : the combined dataset (for visualization).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Then visualize the dataset:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;ggplot2&amp;#39;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+qplot&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; data&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;linear1.data&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; x.1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; x.2&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; colour&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;factor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;y&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; 
+                    shape&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;factor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;train&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;Question 1:&lt;/strong&gt; How can you characterise this dataset ?&lt;/p&gt;
+
+&lt;p&gt;Given what we learned during the lecture, we train a &lt;strong&gt;linear SVM&lt;/strong&gt; on the training set which will be our predictor for the testing set.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;A.3/A.4/A.5)&lt;/strong&gt; Training the SVM:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;c1&quot;&gt;### A.3) Train a linear SVM&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;kernlab&amp;#39;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+linear1.svm &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; ksvm&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; y &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; data&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;linear1.train&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;C-svc&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+                        kernel&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;vanilladot&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                        C&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; scale&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;### A.4) Plot the model&lt;/span&gt;
+plot&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; linear1.svm&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; data&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;linear1.train &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;### A.5) Adding points of test on the graph&lt;/span&gt;
+points&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; linear1.test.input&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;sample.int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;nrow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;linear1.test.input&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; pch&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;A.6/A.7&lt;/strong&gt; Testing on another dataset:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;c1&quot;&gt;### A.6) Prediction&lt;/span&gt;
+linear1.prediction &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; predict&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; linear1.svm&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; linear1.test.input &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;### A.7) Look at accuracy&lt;/span&gt;
+&lt;span class=&quot;kp&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;linear1Sol.RData&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# contains linear1.test.output&lt;/span&gt;
+
+&lt;span class=&quot;kp&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;paste0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;Accuracy: &amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;floor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; linear1.prediction &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; linear1.test.output &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;linear1.test.output&lt;span class=&quot;p&quot;&gt;)),&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;%&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Let&amp;#39;s consider a dataset a bit more complex:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;A.9 to A.14)&lt;/strong&gt; This is the exact same thing as the first part except that the dataset is non-separable.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Question 2:&lt;/strong&gt; Is the accuracy a sufficient method to assess the performance of a model?&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s discuss a few ways to improve the assessment of the performance:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;A.15)&lt;/strong&gt; Separate positive and negative examples :&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;c1&quot;&gt;### A.15) A confusion matrix gives more information than just accuracy&lt;/span&gt;
+&lt;span class=&quot;kp&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;Confusion Matrix: &amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; linear2.prediction&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; linear2.test.output&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; dnn&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;prediction&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;reality&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;A.16)&lt;/strong&gt; ROC Curves (See &lt;a href=&quot;http://en.wikipedia.org/wiki/Receiver_operating_characteristic&quot;&gt;wikipedia&lt;/a&gt;):&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;linear2.prediction.score &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; predict&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; linear2.svm&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; linear2.test.input&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;decision&amp;#39;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;ROCR&amp;#39;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;## ROC&lt;/span&gt;
+linear2.roc.curve &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; performance&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; prediction&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; linear2.prediction.score&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; linear2.test.output &lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; measure&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;tpr&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; x.measure&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fpr&amp;#39;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+plot&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; linear2.roc.curve &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Part B: Non-Linear dataset.&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;B.1/B.2/B.3)&lt;/strong&gt; Trying linear SVM on a dataset where it is not appropriate.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s try a different kernel&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;B.4)&lt;/strong&gt; RBF Kernel:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;nonlinear.svm &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; ksvm&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; y &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; data&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;nonlinear.train&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;C-svc&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+                  kernel&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;rbf&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; kpar&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;sigma&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; 
+                  C&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; scale&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+plot&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; nonlinear.svm&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; data&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;nonlinear.train &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;Question 3:&lt;/strong&gt; Recall what is the parameter &lt;code&gt;C&lt;/code&gt; in the svm. In the following we will see what happens when we vary &lt;code&gt;C&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;B.5)&lt;/strong&gt; Impact of &lt;code&gt;C&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;manipulate&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+manipulate&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; plot&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; ksvm&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; y &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; data&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;nonlinear.train&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;C-svc&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+            kernel&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; C&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;c.exponent&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; scale&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+            data&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;nonlinear.train &lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; 
+           c.exponent&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;slider&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;-10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+                   k&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;picker&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;Gaussian&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;rbfdot&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;Linear&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;vanilladot&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+                    &lt;span class=&quot;s&quot;&gt;&amp;#39;Hyperbolic&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;tanhdot&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;Spline&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;splinedot&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+                &lt;span class=&quot;s&quot;&gt;&amp;#39;Laplacian&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;laplacedot&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;B.6)&lt;/strong&gt; Visualization of the impact of &lt;code&gt;C&lt;/code&gt; on the prediction accuracy (&lt;strong&gt;Bias-Variance Tradeoff&lt;/strong&gt;):&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Question 4:&lt;/strong&gt; How to choose &lt;code&gt;C&lt;/code&gt; ?&lt;/p&gt;
+
+&lt;h3&gt;Part C (Supplementary): Acute lymphoblastic leukemia dataset.&lt;/h3&gt;
+
+&lt;p&gt;In this part, we work on a real public dataset of &lt;em&gt;Acute lymphoblastic leukemia (ALL)&lt;/em&gt; patients.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;C.1)&lt;/strong&gt; We are interested in classifying leukemia patients into two classes: &lt;em&gt;B-cell ALL&lt;/em&gt; vs &lt;em&gt;T-cell ALL&lt;/em&gt;  because this classification can have an impact on the &lt;strong&gt;patient&amp;#39;s prognosis&lt;/strong&gt; or &lt;strong&gt;its response to a given treatment&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;C.2)&lt;/strong&gt; When we add supplementary clinical information, we have more than 2 classes (&lt;em&gt;B1&lt;/em&gt;, &lt;em&gt;B2&lt;/em&gt;,...).  &lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Question 5:&lt;/strong&gt; How can you derive from what you learned a SVM classifier that can predict more than 2 classes?&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Integrative DNA methylation and gene expression profiles to assess the universality of the CpG island methylator phenotype</title>
+   <link href="http://cbio.ensmp.fr/~mmoarii/2015-05-01/integrative-DNA-methylation-and-gene-expression-profiles-to-assess-the-universality-of-the-CpG-island-methylator-phenotype.html"/>
+   <updated>2015-05-01T00:00:00+02:00</updated>
+   <id>http://cbio.ensmp.fr/~mmoarii/2015-05-01/integrative-DNA-methylation-and-gene-expression-profiles-to-assess-the-universality-of-the-CpG-island-methylator-phenotype</id>
+   <content type="html">&lt;p&gt;Available soon.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Changes in gene expression control by DNA methylation in cancer</title>
+   <link href="http://cbio.ensmp.fr/~mmoarii/2015-05-01/changes-in-gene-expression-control-by-DNA-methylation-in-cancer.html"/>
+   <updated>2015-05-01T00:00:00+02:00</updated>
+   <id>http://cbio.ensmp.fr/~mmoarii/2015-05-01/changes-in-gene-expression-control-by-DNA-methylation-in-cancer</id>
+   <content type="html">&lt;p&gt;Available soon.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>Epigenomic alterations in breast carcinomas from primary tumor to locoregional recurrences</title>
-   <link href="http://cbio.ensmp.fr/~mmoarii/publi/2014/07/30/epigenomic-alterations-in-breast-carcinomas/"/>
-   <updated>2014-07-30T00:00:00+02:00</updated>
-   <id>http://cbio.ensmp.fr/~mmoarii/publi/2014/07/30/epigenomic-alterations-in-breast-carcinomas</id>
+   <link href="http://cbio.ensmp.fr/~mmoarii/2014-08-01/epigenomic-alterations-in-breast-carcinomas.html"/>
+   <updated>2014-08-01T00:00:00+02:00</updated>
+   <id>http://cbio.ensmp.fr/~mmoarii/2014-08-01/epigenomic-alterations-in-breast-carcinomas</id>
    <content type="html">&lt;p&gt;&lt;em&gt;Introduction&lt;/em&gt; : Epigenetic modifications such as aberrant DNA methylation has long been associated with tumorogenesis. Little is known, however, about how these modifications appear in cancer progres- sion. Comparing the methylome of breast carcinomas and locoregional evolutions could shed light on this process.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Methods&lt;/em&gt; : The methylome profiles of 48 primary breast carcinomas (PT) and their matched axillary metastases (PT/AM pairs, 20 cases), local recurrences (PT/LR pairs, 17 cases) or contralateral breast carcinomas (PT/CL pairs, 11 cases) were analyzed. Univariate and multivariate analyzes were performed to determine differentially methylated probes (DMPs), and a similarity score was defined to compare methylation profiles. Correlation with copy-number based score was calculated and metastatic-free sur- vival was compared between methods.&lt;/p&gt;
@@ -29,22 +175,33 @@
  
  <entry>
    <title>bio-info, SVM and Graph-kernels</title>
-   <link href="http://cbio.ensmp.fr/~mmoarii/teaching/2014/05/09/Bioinfo-SVM-Graph-Kernels/"/>
+   <link href="http://cbio.ensmp.fr/~mmoarii/2014-05-09/Bioinfo-SVM-Graph-Kernels.html"/>
    <updated>2014-05-09T00:00:00+02:00</updated>
-   <id>http://cbio.ensmp.fr/~mmoarii/teaching/2014/05/09/Bioinfo-SVM-Graph-Kernels</id>
+   <id>http://cbio.ensmp.fr/~mmoarii/2014-05-09/Bioinfo-SVM-Graph-Kernels</id>
    <content type="html">&lt;p&gt;&lt;strong&gt;Introduction&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;This page is the practical session of the &amp;quot;Machine Learning for Computational Biology&amp;quot; module taught by &lt;a href=&quot;http://cbio.ensmp.fr/jvert&quot;&gt;Jean-Philippe Vert&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Material&lt;/strong&gt;&lt;/p&gt;
 
+&lt;p&gt;The practical session is done using &lt;a href=&quot;http://cran.r-project.org&quot;&gt;R&lt;/a&gt;. For a quick tutorial, follow this &lt;a href=&quot;http://matahi.github.io/tutorial/R&quot;&gt;link&lt;/a&gt;.&lt;/p&gt;
+
 &lt;p&gt;&lt;strong&gt;Practical Session&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Necessary support:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The lecture &lt;a href=&quot;http://cbio.ensmp.fr/%7Ejvert/talks/110401mines/mines.pdf&quot;&gt;slides&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;The practical session R &lt;a href=&quot;http://matahi.github.io/teaching/Bioinfo-SVM-Graph-Kernels.R&quot;&gt;file&lt;/a&gt; &lt;/li&gt;
+&lt;/ul&gt;
 </content>
  </entry>
  
  <entry>
    <title>Introducing Hyde</title>
-   <link href="http://cbio.ensmp.fr/~mmoarii/2013/12/28/introducing-hyde/"/>
+   <link href="http://cbio.ensmp.fr/~mmoarii/2013-12-28/introducing-hyde.html"/>
    <updated>2013-12-28T00:00:00+01:00</updated>
-   <id>http://cbio.ensmp.fr/~mmoarii/2013/12/28/introducing-hyde</id>
+   <id>http://cbio.ensmp.fr/~mmoarii/2013-12-28/introducing-hyde</id>
    <content type="html">&lt;p&gt;Hyde is a brazen two-column &lt;a href=&quot;http://jekyllrb.com&quot;&gt;Jekyll&lt;/a&gt; theme that pairs a prominent sidebar with uncomplicated content. It&amp;#39;s based on &lt;a href=&quot;http://getpoole.com&quot;&gt;Poole&lt;/a&gt;, the Jekyll butler.&lt;/p&gt;
 
 &lt;h3&gt;Built on Poole&lt;/h3&gt;
@@ -86,9 +243,9 @@
  
  <entry>
    <title>Example content</title>
-   <link href="http://cbio.ensmp.fr/~mmoarii/2012/02/07/example-content/"/>
+   <link href="http://cbio.ensmp.fr/~mmoarii/2012-02-07/example-content.html"/>
    <updated>2012-02-07T00:00:00+01:00</updated>
-   <id>http://cbio.ensmp.fr/~mmoarii/2012/02/07/example-content</id>
+   <id>http://cbio.ensmp.fr/~mmoarii/2012-02-07/example-content</id>
    <content type="html">&lt;p&gt;This blog post shows a few different types of content that&amp;#39;s supported and styled with Hyde. Basic typography, images, and code are all supported.&lt;/p&gt;
 
 &lt;hr&gt;
@@ -148,9 +305,9 @@
  
  <entry>
    <title>What's Jekyll?</title>
-   <link href="http://cbio.ensmp.fr/~mmoarii/test/2012/02/06/whats-jekyll/"/>
+   <link href="http://cbio.ensmp.fr/~mmoarii/2012-02-06/whats-jekyll.html"/>
    <updated>2012-02-06T00:00:00+01:00</updated>
-   <id>http://cbio.ensmp.fr/~mmoarii/test/2012/02/06/whats-jekyll</id>
+   <id>http://cbio.ensmp.fr/~mmoarii/2012-02-06/whats-jekyll</id>
    <content type="html">&lt;p&gt;&lt;a href=&quot;http://jekyllrb.com&quot;&gt;Jekyll&lt;/a&gt; is a static site generator, an open-source tool for creating simple yet powerful websites of all shapes and sizes. From &lt;a href=&quot;https://github.com/mojombo/jekyll/blob/master/README.markdown&quot;&gt;the project&amp;#39;s readme&lt;/a&gt;:&lt;/p&gt;
 
 &lt;blockquote&gt;
