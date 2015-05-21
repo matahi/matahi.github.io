@@ -4,7 +4,7 @@
  <title></title>
  <link href="http://cbio.ensmp.fr/~mmoarii/atom.xml" rel="self"/>
  <link href="http://cbio.ensmp.fr/~mmoarii/"/>
- <updated>2015-05-21T17:21:33+02:00</updated>
+ <updated>2015-05-21T17:41:47+02:00</updated>
  <id>http://cbio.ensmp.fr/~mmoarii</id>
  <author>
    <name>Matahi MOARII</name>
@@ -19,7 +19,7 @@
    <id>http://cbio.ensmp.fr/~mmoarii/2015-05-22/Bioinfo-SVM-Graph-Kernels</id>
    <content type="html">&lt;h1&gt;Introduction&lt;/h1&gt;
 
-&lt;p&gt;This page is the practical session of the &amp;quot;Machine Learning for Computational Biology&amp;quot; module taught by &lt;a href=&quot;http://cbio.ensmp.fr/jvert&quot;&gt;Jean-Philippe Vert&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;This page is the practical session of the &amp;quot;Support Vector Machines&amp;quot; module taught by &lt;a href=&quot;http://cazencott.info&quot;&gt;Chloé-Agathe Azencott&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h1&gt;Material&lt;/h1&gt;
 
@@ -30,7 +30,7 @@
 &lt;h2&gt;Necessary support:&lt;/h2&gt;
 
 &lt;ul&gt;
-&lt;li&gt;The lecture &lt;a href=&quot;http://cbio.ensmp.fr/%7Ejvert/talks/110401mines/mines.pdf&quot;&gt;slides&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;The lecture &lt;a href=&quot;http://cazencott.info/dotclear/public/lectures/2015-S1234-svm.pdf&quot;&gt;slides&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;The practical session R and the datasets &lt;a href=&quot;http://matahi.github.io/downloads/TP_Mines_2015.zip&quot;&gt;file&lt;/a&gt; &lt;/li&gt;
 &lt;/ul&gt;
 
