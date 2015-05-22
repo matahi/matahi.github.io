@@ -4,7 +4,7 @@
  <title></title>
  <link href="http://cbio.ensmp.fr/~mmoarii/atom.xml" rel="self"/>
  <link href="http://cbio.ensmp.fr/~mmoarii/"/>
- <updated>2015-05-22T14:59:26+02:00</updated>
+ <updated>2015-05-22T15:04:18+02:00</updated>
  <id>http://cbio.ensmp.fr/~mmoarii</id>
  <author>
    <name>Matahi MOARII</name>
@@ -126,22 +126,18 @@ manipulate&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; plot&lt;span class=&quo
                     &lt;span class=&quot;s&quot;&gt;&amp;#39;Hyperbolic&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;tanhdot&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;Spline&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;splinedot&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
                 &lt;span class=&quot;s&quot;&gt;&amp;#39;Laplacian&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;laplacedot&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;strong&gt;B.6)&lt;/strong&gt; Visualization of the impact of &lt;code&gt;C&lt;/code&gt; on the prediction accuracy (&lt;strong&gt;Bias-Variance Tradeoff&lt;/strong&gt;):
-```{r}&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;B.6)&lt;/strong&gt; Visualization of the impact of &lt;code&gt;C&lt;/code&gt; on the prediction accuracy (&lt;strong&gt;Bias-Variance Tradeoff&lt;/strong&gt;):&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;c1&quot;&gt;### B.6) Bias-Variance Tradeoff&lt;/span&gt;
+BiasVarianceTradeoff &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; dataset&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; cross&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; c.seq&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;seq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;-10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  err &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;sapply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; c.seq&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; 
+                &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                        cross&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; ksvm&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; y &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; data&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;dataset&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; C&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; cross&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;cross&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;data.frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;c.seq&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; error&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;err &lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
-&lt;h3&gt;B.6) Bias-Variance Tradeoff&lt;/h3&gt;
-
-&lt;p&gt;BiasVarianceTradeoff &amp;lt;- function( dataset, cross=10, c.seq=2^seq(-10, 10), ... ) {
-  err &amp;lt;- sapply( c.seq, function( c ) 
-                {
-                        cross( ksvm( y ~ ., data=dataset, C=c, cross=cross, ...) )
-                })
-  return(data.frame( c=c.seq, error=err ))
-}&lt;/p&gt;
-
-&lt;p&gt;qplot( c, error, data=BiasVarianceTradeoff( nonlinear.train, type=&amp;#39;C-svc&amp;#39;, kernel=&amp;#39;rbfdot&amp;#39; ), geom=&amp;#39;line&amp;#39;, log=&amp;#39;x&amp;#39; )
-```&lt;/p&gt;
-
+qplot&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; error&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; data&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;BiasVarianceTradeoff&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; nonlinear.train&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;C-svc&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; kernel&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;rbfdot&amp;#39;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; geom&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;line&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; log&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;x&amp;#39;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;strong&gt;Question 5:&lt;/strong&gt; How to choose &lt;code&gt;C&lt;/code&gt; ?&lt;/p&gt;
 
 &lt;h3&gt;Part C: Acute lymphoblastic leukemia dataset.&lt;/h3&gt;

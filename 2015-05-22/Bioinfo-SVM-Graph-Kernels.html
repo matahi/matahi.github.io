@@ -242,22 +242,18 @@ manipulate<span class="p">(</span> plot<span class="p">(</span> ksvm<span class=
                     <span class="s">&#39;Hyperbolic&#39;</span><span class="o">=</span><span class="s">&#39;tanhdot&#39;</span><span class="p">,</span><span class="s">&#39;Spline&#39;</span><span class="o">=</span><span class="s">&#39;splinedot&#39;</span><span class="p">,</span> 
                 <span class="s">&#39;Laplacian&#39;</span><span class="o">=</span><span class="s">&#39;laplacedot&#39;</span><span class="p">)</span> <span class="p">)</span>
 </code></pre></div>
-<p><strong>B.6)</strong> Visualization of the impact of <code>C</code> on the prediction accuracy (<strong>Bias-Variance Tradeoff</strong>):
-```{r}</p>
+<p><strong>B.6)</strong> Visualization of the impact of <code>C</code> on the prediction accuracy (<strong>Bias-Variance Tradeoff</strong>):</p>
+<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">### B.6) Bias-Variance Tradeoff</span>
+BiasVarianceTradeoff <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span> dataset<span class="p">,</span> cross<span class="o">=</span><span class="m">10</span><span class="p">,</span> c.seq<span class="o">=</span><span class="m">2</span><span class="o">^</span><span class="kp">seq</span><span class="p">(</span><span class="m">-10</span><span class="p">,</span> <span class="m">10</span><span class="p">),</span> <span class="kc">...</span> <span class="p">)</span> <span class="p">{</span>
+  err <span class="o">&lt;-</span> <span class="kp">sapply</span><span class="p">(</span> c.seq<span class="p">,</span> <span class="kr">function</span><span class="p">(</span> <span class="kt">c</span> <span class="p">)</span> 
+                <span class="p">{</span>
+                        cross<span class="p">(</span> ksvm<span class="p">(</span> y <span class="o">~</span> <span class="m">.</span><span class="p">,</span> data<span class="o">=</span>dataset<span class="p">,</span> C<span class="o">=</span><span class="kt">c</span><span class="p">,</span> cross<span class="o">=</span>cross<span class="p">,</span> <span class="kc">...</span><span class="p">)</span> <span class="p">)</span>
+                <span class="p">})</span>
+  <span class="kr">return</span><span class="p">(</span><span class="kt">data.frame</span><span class="p">(</span> <span class="kt">c</span><span class="o">=</span>c.seq<span class="p">,</span> error<span class="o">=</span>err <span class="p">))</span>
+<span class="p">}</span>
 
-<h3>B.6) Bias-Variance Tradeoff</h3>
-
-<p>BiasVarianceTradeoff &lt;- function( dataset, cross=10, c.seq=2^seq(-10, 10), ... ) {
-  err &lt;- sapply( c.seq, function( c ) 
-                {
-                        cross( ksvm( y ~ ., data=dataset, C=c, cross=cross, ...) )
-                })
-  return(data.frame( c=c.seq, error=err ))
-}</p>
-
-<p>qplot( c, error, data=BiasVarianceTradeoff( nonlinear.train, type=&#39;C-svc&#39;, kernel=&#39;rbfdot&#39; ), geom=&#39;line&#39;, log=&#39;x&#39; )
-```</p>
-
+qplot<span class="p">(</span> <span class="kt">c</span><span class="p">,</span> error<span class="p">,</span> data<span class="o">=</span>BiasVarianceTradeoff<span class="p">(</span> nonlinear.train<span class="p">,</span> type<span class="o">=</span><span class="s">&#39;C-svc&#39;</span><span class="p">,</span> kernel<span class="o">=</span><span class="s">&#39;rbfdot&#39;</span> <span class="p">),</span> geom<span class="o">=</span><span class="s">&#39;line&#39;</span><span class="p">,</span> log<span class="o">=</span><span class="s">&#39;x&#39;</span> <span class="p">)</span>
+</code></pre></div>
 <p><strong>Question 5:</strong> How to choose <code>C</code> ?</p>
 
 <h3>Part C: Acute lymphoblastic leukemia dataset.</h3>
