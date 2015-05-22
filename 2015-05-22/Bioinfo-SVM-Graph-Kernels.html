@@ -81,6 +81,14 @@
         
           
             <li class="sidebar-nav-item">
+              <a href="/resume/index.html">Resume</a>
+            </li>
+          
+        
+      
+        
+          
+            <li class="sidebar-nav-item">
               <a href="/teaching/index.html">Teaching</a>
             </li>
           
@@ -114,7 +122,6 @@
           
         
       
-
     </ul>
 
     <!-- <p>&copy; 2015. All rights reserved.</p> -->
@@ -178,6 +185,8 @@ plot<span class="p">(</span> linear1.svm<span class="p">,</span> data<span class
 <span class="c1">### A.5) Adding points of test on the graph</span>
 points<span class="p">(</span> linear1.test.input<span class="p">[</span> <span class="kp">sample.int</span><span class="p">(</span><span class="kp">nrow</span><span class="p">(</span>linear1.test.input<span class="p">),</span><span class="m">10</span><span class="p">),</span> <span class="p">],</span> pch<span class="o">=</span><span class="m">4</span> <span class="p">)</span>
 </code></pre></div>
+<p><strong>Question 2:</strong> What are the black points in the figure ?</p>
+
 <p><strong>A.6/A.7</strong> Testing on another dataset:</p>
 <div class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">### A.6) Prediction</span>
 linear1.prediction <span class="o">&lt;-</span> predict<span class="p">(</span> linear1.svm<span class="p">,</span> linear1.test.input <span class="p">)</span>
@@ -192,7 +201,7 @@ linear1.prediction <span class="o">&lt;-</span> predict<span class="p">(</span> 
 
 <p><strong>A.9 to A.14)</strong> This is the exact same thing as the first part except that the dataset is non-separable.</p>
 
-<p><strong>Question 2:</strong> Is the accuracy a sufficient method to assess the performance of a model?</p>
+<p><strong>Question 3:</strong> Is the accuracy a sufficient method to assess the performance of a model?</p>
 
 <p>Let&#39;s discuss a few ways to improve the assessment of the performance:</p>
 
@@ -221,7 +230,7 @@ plot<span class="p">(</span> linear2.roc.curve <span class="p">)</span>
                   C<span class="o">=</span><span class="m">100</span><span class="p">,</span> scale<span class="o">=</span><span class="kt">c</span><span class="p">()</span> <span class="p">)</span>
 plot<span class="p">(</span> nonlinear.svm<span class="p">,</span> data<span class="o">=</span>nonlinear.train <span class="p">)</span>
 </code></pre></div>
-<p><strong>Question 3:</strong> Recall what is the parameter <code>C</code> in the svm. In the following we will see what happens when we vary <code>C</code>.</p>
+<p><strong>Question 4:</strong> Recall what is the parameter <code>C</code> in the svm. In the following we will see what happens when we vary <code>C</code>.</p>
 
 <p><strong>B.5)</strong> Impact of <code>C</code></p>
 <div class="highlight"><pre><code class="language-r" data-lang="r"><span class="kn">require</span><span class="p">(</span><span class="s">&#39;manipulate&#39;</span><span class="p">)</span>
@@ -233,11 +242,25 @@ manipulate<span class="p">(</span> plot<span class="p">(</span> ksvm<span class=
                     <span class="s">&#39;Hyperbolic&#39;</span><span class="o">=</span><span class="s">&#39;tanhdot&#39;</span><span class="p">,</span><span class="s">&#39;Spline&#39;</span><span class="o">=</span><span class="s">&#39;splinedot&#39;</span><span class="p">,</span> 
                 <span class="s">&#39;Laplacian&#39;</span><span class="o">=</span><span class="s">&#39;laplacedot&#39;</span><span class="p">)</span> <span class="p">)</span>
 </code></pre></div>
-<p><strong>B.6)</strong> Visualization of the impact of <code>C</code> on the prediction accuracy (<strong>Bias-Variance Tradeoff</strong>):</p>
+<p><strong>B.6)</strong> Visualization of the impact of <code>C</code> on the prediction accuracy (<strong>Bias-Variance Tradeoff</strong>):
+```{r}</p>
 
-<p><strong>Question 4:</strong> How to choose <code>C</code> ?</p>
+<h3>B.6) Bias-Variance Tradeoff</h3>
 
-<h3>Part C (Supplementary): Acute lymphoblastic leukemia dataset.</h3>
+<p>BiasVarianceTradeoff &lt;- function( dataset, cross=10, c.seq=2^seq(-10, 10), ... ) {
+  err &lt;- sapply( c.seq, function( c ) 
+                {
+                        cross( ksvm( y ~ ., data=dataset, C=c, cross=cross, ...) )
+                })
+  return(data.frame( c=c.seq, error=err ))
+}</p>
+
+<p>qplot( c, error, data=BiasVarianceTradeoff( nonlinear.train, type=&#39;C-svc&#39;, kernel=&#39;rbfdot&#39; ), geom=&#39;line&#39;, log=&#39;x&#39; )
+```</p>
+
+<p><strong>Question 5:</strong> How to choose <code>C</code> ?</p>
+
+<h3>Part C: Acute lymphoblastic leukemia dataset.</h3>
 
 <p>In this part, we work on a real public dataset of <em>Acute lymphoblastic leukemia (ALL)</em> patients.</p>
 
@@ -245,7 +268,7 @@ manipulate<span class="p">(</span> plot<span class="p">(</span> ksvm<span class=
 
 <p><strong>C.2)</strong> When we add supplementary clinical information, we have more than 2 classes (<em>B1</em>, <em>B2</em>,...).  </p>
 
-<p><strong>Question 5:</strong> How can you derive from what you learned a SVM classifier that can predict more than 2 classes?</p>
+<p><strong>Question 6:</strong> How can you derive from what you learned a SVM classifier that can predict more than 2 classes?</p>
 
 </div>
 

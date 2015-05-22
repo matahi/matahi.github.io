@@ -4,7 +4,7 @@
  <title></title>
  <link href="http://cbio.ensmp.fr/~mmoarii/atom.xml" rel="self"/>
  <link href="http://cbio.ensmp.fr/~mmoarii/"/>
- <updated>2015-05-21T17:41:47+02:00</updated>
+ <updated>2015-05-22T14:59:26+02:00</updated>
  <id>http://cbio.ensmp.fr/~mmoarii</id>
  <author>
    <name>Matahi MOARII</name>
@@ -69,6 +69,8 @@ plot&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; linear1.svm&lt;span class=&qu
 &lt;span class=&quot;c1&quot;&gt;### A.5) Adding points of test on the graph&lt;/span&gt;
 points&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; linear1.test.input&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;sample.int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;nrow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;linear1.test.input&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; pch&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;Question 2:&lt;/strong&gt; What are the black points in the figure ?&lt;/p&gt;
+
 &lt;p&gt;&lt;strong&gt;A.6/A.7&lt;/strong&gt; Testing on another dataset:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;c1&quot;&gt;### A.6) Prediction&lt;/span&gt;
 linear1.prediction &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; predict&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; linear1.svm&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; linear1.test.input &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -83,7 +85,7 @@ linear1.prediction &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; predic
 
 &lt;p&gt;&lt;strong&gt;A.9 to A.14)&lt;/strong&gt; This is the exact same thing as the first part except that the dataset is non-separable.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Question 2:&lt;/strong&gt; Is the accuracy a sufficient method to assess the performance of a model?&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Question 3:&lt;/strong&gt; Is the accuracy a sufficient method to assess the performance of a model?&lt;/p&gt;
 
 &lt;p&gt;Let&amp;#39;s discuss a few ways to improve the assessment of the performance:&lt;/p&gt;
 
@@ -112,7 +114,7 @@ plot&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; linear2.roc.curve &lt;span cl
                   C&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; scale&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 plot&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; nonlinear.svm&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; data&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;nonlinear.train &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;strong&gt;Question 3:&lt;/strong&gt; Recall what is the parameter &lt;code&gt;C&lt;/code&gt; in the svm. In the following we will see what happens when we vary &lt;code&gt;C&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Question 4:&lt;/strong&gt; Recall what is the parameter &lt;code&gt;C&lt;/code&gt; in the svm. In the following we will see what happens when we vary &lt;code&gt;C&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;B.5)&lt;/strong&gt; Impact of &lt;code&gt;C&lt;/code&gt;&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;manipulate&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -124,11 +126,25 @@ manipulate&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; plot&lt;span class=&quo
                     &lt;span class=&quot;s&quot;&gt;&amp;#39;Hyperbolic&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;tanhdot&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;Spline&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;splinedot&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
                 &lt;span class=&quot;s&quot;&gt;&amp;#39;Laplacian&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;laplacedot&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;strong&gt;B.6)&lt;/strong&gt; Visualization of the impact of &lt;code&gt;C&lt;/code&gt; on the prediction accuracy (&lt;strong&gt;Bias-Variance Tradeoff&lt;/strong&gt;):&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;B.6)&lt;/strong&gt; Visualization of the impact of &lt;code&gt;C&lt;/code&gt; on the prediction accuracy (&lt;strong&gt;Bias-Variance Tradeoff&lt;/strong&gt;):
+```{r}&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Question 4:&lt;/strong&gt; How to choose &lt;code&gt;C&lt;/code&gt; ?&lt;/p&gt;
+&lt;h3&gt;B.6) Bias-Variance Tradeoff&lt;/h3&gt;
 
-&lt;h3&gt;Part C (Supplementary): Acute lymphoblastic leukemia dataset.&lt;/h3&gt;
+&lt;p&gt;BiasVarianceTradeoff &amp;lt;- function( dataset, cross=10, c.seq=2^seq(-10, 10), ... ) {
+  err &amp;lt;- sapply( c.seq, function( c ) 
+                {
+                        cross( ksvm( y ~ ., data=dataset, C=c, cross=cross, ...) )
+                })
+  return(data.frame( c=c.seq, error=err ))
+}&lt;/p&gt;
+
+&lt;p&gt;qplot( c, error, data=BiasVarianceTradeoff( nonlinear.train, type=&amp;#39;C-svc&amp;#39;, kernel=&amp;#39;rbfdot&amp;#39; ), geom=&amp;#39;line&amp;#39;, log=&amp;#39;x&amp;#39; )
+```&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Question 5:&lt;/strong&gt; How to choose &lt;code&gt;C&lt;/code&gt; ?&lt;/p&gt;
+
+&lt;h3&gt;Part C: Acute lymphoblastic leukemia dataset.&lt;/h3&gt;
 
 &lt;p&gt;In this part, we work on a real public dataset of &lt;em&gt;Acute lymphoblastic leukemia (ALL)&lt;/em&gt; patients.&lt;/p&gt;
 
@@ -136,7 +152,7 @@ manipulate&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; plot&lt;span class=&quo
 
 &lt;p&gt;&lt;strong&gt;C.2)&lt;/strong&gt; When we add supplementary clinical information, we have more than 2 classes (&lt;em&gt;B1&lt;/em&gt;, &lt;em&gt;B2&lt;/em&gt;,...).  &lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Question 5:&lt;/strong&gt; How can you derive from what you learned a SVM classifier that can predict more than 2 classes?&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Question 6:&lt;/strong&gt; How can you derive from what you learned a SVM classifier that can predict more than 2 classes?&lt;/p&gt;
 </content>
  </entry>
  
