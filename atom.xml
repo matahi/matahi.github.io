@@ -4,7 +4,7 @@
  <title></title>
  <link href="http://cbio.ensmp.fr/~mmoarii/atom.xml" rel="self"/>
  <link href="http://cbio.ensmp.fr/~mmoarii/"/>
- <updated>2015-05-29T11:42:35+02:00</updated>
+ <updated>2015-05-29T17:21:48+02:00</updated>
  <id>http://cbio.ensmp.fr/~mmoarii</id>
  <author>
    <name>Matahi MOARII</name>
@@ -23,7 +23,7 @@
 
 &lt;h1&gt;Material&lt;/h1&gt;
 
-&lt;p&gt;The practical session is done using &lt;a href=&quot;http://cran.r-project.org&quot;&gt;R&lt;/a&gt;. For a quick tutorial, follow this &lt;a href=&quot;http://pages.pomona.edu/%7Ejsh04747/courses/R.pdf&quot;&gt;link&lt;/a&gt;{:target=&amp;quot;_blank&amp;quot;}.&lt;/p&gt;
+&lt;p&gt;The practical session is done using &lt;a href=&quot;http://cran.r-project.org&quot;&gt;R&lt;/a&gt;. For a quick tutorial, follow this &lt;a href=&quot;http://pages.pomona.edu/%7Ejsh04747/courses/R.pdf&quot;&gt;link&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h1&gt;Practical Session&lt;/h1&gt;
 
@@ -31,7 +31,7 @@
 
 &lt;ul&gt;
 &lt;li&gt;The lecture &lt;a href=&quot;http://cazencott.info/dotclear/public/lectures/2015-S1234-svm.pdf&quot;&gt;slides&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;The practical session R and the datasets &lt;a href=&quot;http://matahi.github.io/downloads/TP_Mines_2015.zip&quot;&gt;file&lt;/a&gt; &lt;/li&gt;
+&lt;li&gt;The practical session R and the datasets &lt;a href=&quot;http://matahi.github.io/downloads/TPMines2015.zip&quot;&gt;file&lt;/a&gt; &lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3&gt;Part A: Linear dataset.&lt;/h3&gt;
