@@ -4,13 +4,285 @@
  <title></title>
  <link href="http://cbio.ensmp.fr/~mmoarii/atom.xml" rel="self"/>
  <link href="http://cbio.ensmp.fr/~mmoarii/"/>
- <updated>2015-05-29T17:21:48+02:00</updated>
+ <updated>2015-07-24T17:37:14+02:00</updated>
  <id>http://cbio.ensmp.fr/~mmoarii</id>
  <author>
    <name>Matahi MOARII</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>CpG Pattern analysis</title>
+   <link href="http://cbio.ensmp.fr/~mmoarii/2015-07-22/CpG-Pattern-Analysis.html"/>
+   <updated>2015-07-22T00:00:00+02:00</updated>
+   <id>http://cbio.ensmp.fr/~mmoarii/2015-07-22/CpG-Pattern-Analysis</id>
+   <content type="html">&lt;h1&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;This page contains the pipeline analysis for the &amp;quot;CpG pattern analysis&amp;quot;. Source code is available &lt;a href=&quot;code/CpG.zip&quot;&gt;here&lt;/a&gt;. The whole analysis can be computed by running the &lt;strong&gt;run_all.R&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2&gt;Data processing&lt;/h2&gt;
+
+&lt;h2&gt;Data analysis&lt;/h2&gt;
+
+&lt;h3&gt;Part A: Analysis of average CGI+SS patterns&lt;/h3&gt;
+
+&lt;p&gt;In the first part, we compare the average CGI+SS profiles for a given dataset (&lt;strong&gt;i.e&lt;/strong&gt; Cancerous breast) across the genome to assess whether specific CGI+SS profiles exist and whether they are associated with any specific gene expression levels.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;DiseaseList &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;BRCA&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;COAD&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;LUAD&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+Type &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;Cancerous&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;Normal&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;A.1)&lt;/strong&gt; Filter CGI+SS with at least 20 probes:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kp&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;../../data/processed/fData/CpGIslands_probe_size.RData&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+list_big_island &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;which&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;CpGIslands.probesize &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This reduces the number of CGIs studied from 27K to 1827 CGIs.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;A.2)&lt;/strong&gt; For each type of tissue and each CGI+SS, we calculate a probewise average profile:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/calculate_Mean_PC.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; calculate_Mean_PC&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Disease&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Cancerous&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;proc&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; calculate_Mean_PC&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Disease&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Normal&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;proc&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;A.3)&lt;/strong&gt; We then perform dynamic time warping to assess for a given tissue and type (normal or cancerous) the distance between two different CGI+SS profiles:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/calculate_Mean_PC.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; calculate_Mean_PC&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Disease&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Cancerous&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;proc&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; calculate_Mean_PC&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Disease&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Normal&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;proc&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This outputs a 1827 x 1827 matrix that gives the DTW distance between all CGI+SS profiles&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;A.4)&lt;/strong&gt; We then perform a hierarchical clustering (linkage=Ward):&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/CGI_analysis.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; analyze_CGI_clusters&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Disease&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;cutoff&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Cancerous&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; analyze_CGI_clusters&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Disease&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;cutoff&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Normal&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;## Value for cutoff (i.e number of clusters is given by the hierarchical clustering)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We observe 2 and 3 clusters of CGI+SS profiles for normal and cancerous tissues respectively.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;A.5)&lt;/strong&gt; We plot the characteristic profiles in each cluster i.e the CGI+SS profiles with the lowest mean distance with other CGI+SS profiles in the cluster:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/plot_characteristic_profiles.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; plot_characteristic_profiles&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Disease&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Cancerous&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; plot_characteristic_profiles&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Disease&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Normal&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;A.6)&lt;/strong&gt; We assess whether a given CGI+SS is clustered in the same cluster in normal or cancerous tissues:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/compare_clusters.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        compare_clusters&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Disease1&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;type1&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Cancerous&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; analysis&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Mean&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Clusters are mostly stable between normal and cancerous tissues beside the cancerous-specific cluster that is derived from CGI+SS coming from cluster 1 and 2 in normal tissues.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;A.7)&lt;/strong&gt; We then assess whether a given CGI+SS is clustered in the same cluster between different tissues:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;DiseaseListbis &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseList&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;k &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        compare_clusters&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Disease1&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseList&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;Disease2&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseList&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;k&lt;span class=&quot;m&quot;&gt;+1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;type1&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Normal&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; analysis&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Mean&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        compare_clusters&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Disease1&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseList&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;Disease2&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseList&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;k&lt;span class=&quot;m&quot;&gt;+1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;type1&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Cancerous&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; analysis&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Mean&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Clusters are less stable between tissues!&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;A.8)&lt;/strong&gt; Finally we look at the link between the CGI+SS patterns and gene expression levels&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/compare_GE_clusters.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        compare_GE_clusters&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; DiseaseName&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;In normal tissue, CGI+SS in cluster 2 (hypermethylated CGIs) are not significantly less expressed than CGI+SS in cluster 1 (hypomethylated CGIs)&lt;/li&gt;
+&lt;li&gt;In cancerous tissues, we observe that genes associated with cluster 3 are significantly repressed compared to genes associated with cluster 1 and 2.&lt;/li&gt;
+&lt;li&gt;Using the clustering of CGI+SS associated with cancerous tissues, and looking at the gene expression distribution in normal tissues, we observe that the genes associated with cluster 3 are also repressed in normal tissues (although the CGI+SS clustering in normal tissues do not have a cluster 3 i.e the CGI+SS are either hypo/hypermethylated). This suggests that overall methylation variations might not be causal in the repression of the genes associated.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Part B: Inter-individual methylation variations to predict gene expression variations&lt;/h3&gt;
+
+&lt;p&gt;Average methylation patterns were not associated with gene expression variations. In the second part, we look the power of inter-individual methylation variations (in the CGI+SS) in a specific dataset, to predict the gene expression variations of the associated genes.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;B.1)&lt;/strong&gt; We build a regression setting where we assess the predictive power of methylation variations to predict gene expression variations.&lt;/p&gt;
+
+&lt;p&gt;We assess the predictive power by performing, for each dataset and for each CGI+SS, a cross-validation procedure (nfolds=3) where we train the parameter of a Lasso on 2/3 of the dataset and we test the prediction on the remaining 1/3 of the dataset.
+The performance is assessed with R^2= cor(yhat, ytest)^2 which is a value between 0 and 1 with 1 being the highest. We bootstrap the prediction procedure (nboostrap=100) and we get a final average R^2 for each gene.&lt;/p&gt;
+
+&lt;p&gt;We assess the predictive power using only the mean CGI information or the full CGI+SS information. Supplementary analyses include all the CGIs associated with a gene or taking the full methylome to predict the gene expression or just the methylation level of the associated chromosome.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;fun/predict_GE.R&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        predict_GE&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Cancerous&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; preprocessing&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;CGIs&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; MethylationAnalysis&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Mean&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        predict_GE&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Normal&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; preprocessing&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;CGIs&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; MethylationAnalysis&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Mean&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+
+        predict_GE&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Cancerous&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; preprocessing&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;CGIs&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; MethylationAnalysis&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Promoter&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        predict_GE&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Normal&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; preprocessing&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;CGIs&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; MethylationAnalysis&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Promoter&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;B.2)&lt;/strong&gt; Summary of the results:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/analyze_prediction.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        analyze_prediction&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;B.3)&lt;/strong&gt; We also had the CNV information in the regression model to assess whether the performance in improved (nfolds=3, nboostrap=100):&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;fun/predict_GE_CNV.R&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        predict_GE_CNV&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Cancerous&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; preprocessing&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;CGIs&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; MethylationAnalysis&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Mean&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        predict_GE_CNV&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Normal&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; preprocessing&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;CGIs&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; MethylationAnalysis&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Mean&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+
+        predict_GE_CNV&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Cancerous&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; preprocessing&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;CGIs&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; MethylationAnalysis&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Promoter&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        predict_GE_CNV&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Normal&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; preprocessing&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;CGIs&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; MethylationAnalysis&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Promoter&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;B.4)&lt;/strong&gt; Summary of the results:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/analyze_prediction_CNV.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        analyze_prediction_CNV&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;B.5)&lt;/strong&gt; We then compare the prediction performance with noCNV info:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/compare_prediction_Normal_Cancerous.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        compare_prediction_CNV_noCNV&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;B.6)&lt;/strong&gt; We compare the prediction performance between different tissues:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/compare_prediction_interCancer.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+compare_prediction_interCancer&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>CIMP analysis</title>
+   <link href="http://cbio.ensmp.fr/~mmoarii/2015-07-22/CIMP-Analysis.html"/>
+   <updated>2015-07-22T00:00:00+02:00</updated>
+   <id>http://cbio.ensmp.fr/~mmoarii/2015-07-22/CIMP-Analysis</id>
+   <content type="html">&lt;h1&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;This page contains the pipeline analysis for the &amp;quot;CIMP analysis&amp;quot;. Source code is available &lt;a href=&quot;code/CpG.zip&quot;&gt;here&lt;/a&gt;. The whole analysis can be computed by running the &lt;strong&gt;run_all.R&lt;/strong&gt; after data processing.&lt;/p&gt;
+
+&lt;h2&gt;Data processing&lt;/h2&gt;
+
+&lt;p&gt;Data processing is done by running the &lt;strong&gt;run_all.R&lt;/strong&gt; located in &lt;strong&gt;data/src&lt;/strong&gt;. The procedure is standard (see report).&lt;/p&gt;
+
+&lt;h2&gt;Data analysis&lt;/h2&gt;
+
+&lt;h3&gt;Part A: Analysis of average CGI+SS patterns&lt;/h3&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;DiseaseList &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;BLCA&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;BRCA&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;COAD&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;LUAD&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;STAD&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;1)&lt;/strong&gt; We first assess CIMP in each tissue using the same methodology on genome-wide methylation profiles by performing hierarchical clustering on the top 5% most variant probes in each disease.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/analyze_CIMP_all_CGIs.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kp&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; analyze_CIMP_all_CGIs&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;CIMP.Number &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; calc.Var&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;2)&lt;/strong&gt; We assess the robustness of the clusters by varying the number of CGIs considered from 1 to 10 percent. At the same time, we also look at the stability of 3 clusters to assess the existence of a CIMP-low phenotype.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;var.list &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+CIMP.list &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/analyze_CIMP_all_CGIs.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;CIMP.Number &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; CIMP.list&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;var.thresh &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; var.list&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                        &lt;span class=&quot;kp&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;paste0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;Analyzing &amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;...&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39; with var=&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;var.thresh&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;% and CIMP.number=&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;CIMP.Number&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                        out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; analyze_CIMP_all_CGIs&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;CIMP.Number &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; CIMP.Number&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; calc.Var&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; var.thresh &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; var.thresh&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;### 2.A) Look at cluster robustness&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/cluster_analysis.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; cluster_analysis&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseList&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseList&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; var.thresh&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;var.thresh&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;### 2.B) Look at cluster robustness given the var.thresh&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/cluster_analysis_var.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+var.list &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Disease &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; cluster_analysis_var&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;Disease&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; CIMP.Number&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; var.list&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; var.list&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;3)&lt;/strong&gt; We fix the top 5% CGIs to define the CIMP-signature instead of another cutoff as a tradeoff between relevant probes and having a wide enough coverage. We then analyze whether there is a common panel of probes between the tissue-specific CIMP-signature.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;var.thresh &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;5&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/compare_panel_all_CGIs.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+DiseaseList &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;BRCA&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;BLCA&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;COAD&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;LUAD&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;STAD&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; compare_panel_all_CGIs&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseList&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; var.thresh&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;var.thresh&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We obtain a subset of 89 CGIs common between all the CIMP-signatures.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;4)&lt;/strong&gt; By combining the samples from the different tissues, we then perform clustering on this common CIMP-signature:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/analyze_CIMP_all_CGIs_bis.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; analyze_CIMP_all_CGIs_bis&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseList&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;CIMP.Number &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;4)&lt;/strong&gt; We then analyze whether the methylation aberrations can be associated with transcriptomic or genetic variations: &lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;4.A)&lt;/strong&gt; Can we assess CIMP from gene expression variations i.e CIMP=f(Gene Expression)?&lt;/p&gt;
+
+&lt;p&gt;We propose to tackle this problem using a sparse logistic regression with different formulations:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;i.&lt;/strong&gt; In the first case we predict the CIMP status for each tissue separately: &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/predict_CIMP_GE_glmnet.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kp&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; predict_CIMP_GE&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; var.thresh&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;var.thresh&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; CIMP.Number&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; centered&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; scaled&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; intercept&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; n.folds&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; bootstrap&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; cores&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; log_exp&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; balanced&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;ii.&lt;/strong&gt; In the second case we compute a single classifier for all datasets:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/predict_CIMP_GE_all.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; predict_CIMP_GE_all&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseList&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; var.thresh&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;var.thresh&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; CIMP.Number&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; centered&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; scaled&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; intercept&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; n.folds&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; bootstrap&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; cores&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; log_exp&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; balanced&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;iii.&lt;/strong&gt; Finally, in the last case we relax the previous constraint (single classifier) by forcing each tissue-specific predictor to have the same non-zero coefficients but allowing the coefficients to vary:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/predict_CIMP_GE_MT_par.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; predict_CIMP_GE_MT&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseList&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; var.thresh&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;var.thresh&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; CIMP.Number&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; centered&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; scaled&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; intercept&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  n.folds&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; bootstrap&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; cores&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; balanced&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;iv.&lt;/strong&gt; Summary of the results: &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/analyze_predict_CIMP_GE_MT.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;4.B)&lt;/strong&gt; Analysis of the mutations associated with CIMP:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;i)&lt;/strong&gt; We analyzed the the association between CIMP and known reported mutations associated with tissue-specific CIMPs (&lt;em&gt;e.g&lt;/em&gt; &lt;em&gt;BRAF&lt;/em&gt;, &lt;em&gt;KRAS&lt;/em&gt;, &lt;em&gt;IDH1&lt;/em&gt;, &lt;em&gt;IDH2&lt;/em&gt;, &lt;em&gt;TET2&lt;/em&gt;).&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/analyze_mutations.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+Mutation.List &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;BRAF&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;KRAS&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;IDH1&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;IDH2&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;TET2&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+analyze_mutations&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseList&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; Mutation.List&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;Mutation.List&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;ii)&lt;/strong&gt; We then also searched for other mutations significantly associated with CIMP in all diseases: 
+&lt;code&gt;{r}
+source(&amp;#39;fun/analyze_mutations.R&amp;#39;)
+analyze_mutations(DiseaseList, Mutation.List=Mutation.List)
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;5)&lt;/strong&gt; Survival analysis&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/compare_clinical.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kp&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; compare_clinical&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; var.thresh&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;var.thresh&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; CIMP.Number&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; CIMP.Number&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+ </entry>
  
  <entry>
    <title>bio-info, SVM and Graph-kernels</title>
@@ -183,6 +455,162 @@ qplot&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;kt&quot
 
 &lt;p&gt;&lt;em&gt;Conclusion&lt;/em&gt; : Epigenomic alterations are well suited to study clonality and track cancer progression. Methylation-based classification of TR and NP performed as well as clinical and copy-number based methods suggesting that these phenomenons are tightly linked.&lt;/p&gt;
 </content>
+ </entry>
+ 
+ <entry>
+   <title>Epigenomic alterations in breast carcinoma from primary tumor to locoregional recurrences</title>
+   <link href="http://cbio.ensmp.fr/~mmoarii/2014-07-22/Epigenomic-alterations.html"/>
+   <updated>2014-07-22T00:00:00+02:00</updated>
+   <id>http://cbio.ensmp.fr/~mmoarii/2014-07-22/Epigenomic-alterations</id>
+   <content type="html">&lt;h1&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;This page contains the pipeline analysis for the article &lt;a href=&quot;link.zip&quot;&gt;Epigenomic alterations in breast carcinoma from primary tumor to locoregional recurrences&lt;/a&gt;. Source code is available &lt;a href=&quot;code/CpG.zip&quot;&gt;here&lt;/a&gt;. The whole analysis can be computed by running the &lt;strong&gt;run_all.R&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2&gt;Data processing&lt;/h2&gt;
+
+&lt;h2&gt;Data analysis&lt;/h2&gt;
+
+&lt;h3&gt;Part A: Analysis of average CGI+SS patterns&lt;/h3&gt;
+
+&lt;p&gt;In the first part, we compare the average CGI+SS profiles for a given dataset (&lt;strong&gt;i.e&lt;/strong&gt; Cancerous breast) across the genome to assess whether specific CGI+SS profiles exist and whether they are associated with any specific gene expression levels.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;DiseaseList &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;BRCA&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;COAD&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;LUAD&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+Type &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;Cancerous&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;Normal&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;A.1)&lt;/strong&gt; Filter CGI+SS with at least 20 probes:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kp&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;../../data/processed/fData/CpGIslands_probe_size.RData&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+list_big_island &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;which&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;CpGIslands.probesize &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This reduces the number of CGIs studied from 27K to 1827 CGIs.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;A.2)&lt;/strong&gt; For each type of tissue and each CGI+SS, we calculate a probewise average profile:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/calculate_Mean_PC.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; calculate_Mean_PC&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Disease&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Cancerous&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;proc&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; calculate_Mean_PC&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Disease&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Normal&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;proc&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;A.3)&lt;/strong&gt; We then perform dynamic time warping to assess for a given tissue and type (normal or cancerous) the distance between two different CGI+SS profiles:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/calculate_Mean_PC.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; calculate_Mean_PC&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Disease&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Cancerous&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;proc&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; calculate_Mean_PC&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Disease&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Normal&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;proc&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This outputs a 1827 x 1827 matrix that gives the DTW distance between all CGI+SS profiles&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;A.4)&lt;/strong&gt; We then perform a hierarchical clustering (linkage=Ward):&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/CGI_analysis.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; analyze_CGI_clusters&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Disease&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;cutoff&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Cancerous&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; analyze_CGI_clusters&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Disease&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;cutoff&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Normal&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;## Value for cutoff (i.e number of clusters is given by the hierarchical clustering)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We observe 2 and 3 clusters of CGI+SS profiles for normal and cancerous tissues respectively.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;A.5)&lt;/strong&gt; We plot the characteristic profiles in each cluster i.e the CGI+SS profiles with the lowest mean distance with other CGI+SS profiles in the cluster:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/plot_characteristic_profiles.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; plot_characteristic_profiles&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Disease&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Cancerous&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        out &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; plot_characteristic_profiles&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Disease&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Normal&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;A.6)&lt;/strong&gt; We assess whether a given CGI+SS is clustered in the same cluster in normal or cancerous tissues:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/compare_clusters.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        compare_clusters&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Disease1&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;type1&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Cancerous&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; analysis&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Mean&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Clusters are mostly stable between normal and cancerous tissues beside the cancerous-specific cluster that is derived from CGI+SS coming from cluster 1 and 2 in normal tissues.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;A.7)&lt;/strong&gt; We then assess whether a given CGI+SS is clustered in the same cluster between different tissues:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;DiseaseListbis &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseList&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;k &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        compare_clusters&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Disease1&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseList&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;Disease2&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseList&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;k&lt;span class=&quot;m&quot;&gt;+1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;type1&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Normal&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; analysis&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Mean&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        compare_clusters&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Disease1&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseList&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;Disease2&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DiseaseList&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;k&lt;span class=&quot;m&quot;&gt;+1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;type1&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Cancerous&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; analysis&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Mean&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Clusters are less stable between tissues!&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;A.8)&lt;/strong&gt; Finally we look at the link between the CGI+SS patterns and gene expression levels&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/compare_GE_clusters.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        compare_GE_clusters&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; DiseaseName&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;In normal tissue, CGI+SS in cluster 2 (hypermethylated CGIs) are not significantly less expressed than CGI+SS in cluster 1 (hypomethylated CGIs)&lt;/li&gt;
+&lt;li&gt;In cancerous tissues, we observe that genes associated with cluster 3 are significantly repressed compared to genes associated with cluster 1 and 2.&lt;/li&gt;
+&lt;li&gt;Using the clustering of CGI+SS associated with cancerous tissues, and looking at the gene expression distribution in normal tissues, we observe that the genes associated with cluster 3 are also repressed in normal tissues (although the CGI+SS clustering in normal tissues do not have a cluster 3 i.e the CGI+SS are either hypo/hypermethylated). This suggests that overall methylation variations might not be causal in the repression of the genes associated.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Part B: Inter-individual methylation variations to predict gene expression variations&lt;/h3&gt;
+
+&lt;p&gt;Average methylation patterns were not associated with gene expression variations. In the second part, we look the power of inter-individual methylation variations (in the CGI+SS) in a specific dataset, to predict the gene expression variations of the associated genes.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;B.1)&lt;/strong&gt; We build a regression setting where we assess the predictive power of methylation variations to predict gene expression variations.&lt;/p&gt;
+
+&lt;p&gt;We assess the predictive power by performing, for each dataset and for each CGI+SS, a cross-validation procedure (nfolds=3) where we train the parameter of a Lasso on 2/3 of the dataset and we test the prediction on the remaining 1/3 of the dataset.
+The performance is assessed with R^2= cor(yhat, ytest)^2 which is a value between 0 and 1 with 1 being the highest. We bootstrap the prediction procedure (nboostrap=100) and we get a final average R^2 for each gene.&lt;/p&gt;
+
+&lt;p&gt;We assess the predictive power using only the mean CGI information or the full CGI+SS information. Supplementary analyses include all the CGIs associated with a gene or taking the full methylome to predict the gene expression or just the methylation level of the associated chromosome.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;fun/predict_GE.R&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        predict_GE&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Cancerous&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; preprocessing&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;CGIs&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; MethylationAnalysis&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Mean&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        predict_GE&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Normal&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; preprocessing&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;CGIs&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; MethylationAnalysis&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Mean&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+
+        predict_GE&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Cancerous&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; preprocessing&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;CGIs&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; MethylationAnalysis&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Promoter&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        predict_GE&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Normal&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; preprocessing&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;CGIs&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; MethylationAnalysis&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Promoter&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;B.2)&lt;/strong&gt; Summary of the results:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/analyze_prediction.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        analyze_prediction&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;B.3)&lt;/strong&gt; We also had the CNV information in the regression model to assess whether the performance in improved (nfolds=3, nboostrap=100):&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;fun/predict_GE_CNV.R&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        predict_GE_CNV&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Cancerous&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; preprocessing&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;CGIs&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; MethylationAnalysis&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Mean&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        predict_GE_CNV&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Normal&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; preprocessing&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;CGIs&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; MethylationAnalysis&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Mean&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+
+        predict_GE_CNV&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Cancerous&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; preprocessing&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;CGIs&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; MethylationAnalysis&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Promoter&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        predict_GE_CNV&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; DiseaseName&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Normal&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; preprocessing&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;CGIs&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; MethylationAnalysis&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Promoter&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;B.4)&lt;/strong&gt; Summary of the results:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/analyze_prediction_CNV.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        analyze_prediction_CNV&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;B.5)&lt;/strong&gt; We then compare the prediction performance with noCNV info:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/compare_prediction_Normal_Cancerous.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; DiseaseList&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        compare_prediction_CNV_noCNV&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DiseaseName&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;B.6)&lt;/strong&gt; We compare the prediction performance between different tissues:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;fun/compare_prediction_interCancer.R&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+compare_prediction_interCancer&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
  </entry>
  
  <entry>
