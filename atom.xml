@@ -4,7 +4,7 @@
  <title></title>
  <link href="http://cbio.ensmp.fr/~mmoarii/atom.xml" rel="self"/>
  <link href="http://cbio.ensmp.fr/~mmoarii/"/>
- <updated>2015-12-12T11:12:22-05:00</updated>
+ <updated>2015-12-12T11:55:35-05:00</updated>
  <id>http://cbio.ensmp.fr/~mmoarii</id>
  <author>
    <name>Matahi MOARII</name>
@@ -24,6 +24,34 @@
 &lt;p&gt;&lt;em&gt;Results&lt;/em&gt; : We perform a genome-wide methylation analysis of over 2000 tumor samples from 5 cancer sites to assess the existence of a CIMP with common molecular basis across cancers. We then show that the CIMP phenotype is associated with specific gene expression variations. However, we do not find a common genetic signature in all tissues associated with CIMP.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Conclusion&lt;/em&gt; : Our results suggest the existence of a universal epigenetic and transcriptomic signature that defines the CIMP across several tumor types but does not indicate the existence of a common genetic signature of CIMP.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Single Cell Rnaseq</title>
+   <link href="http://cbio.ensmp.fr/~mmoarii/2015-10-01/single-cell-rnaseq.html"/>
+   <updated>2015-10-01T00:00:00-04:00</updated>
+   <id>http://cbio.ensmp.fr/~mmoarii/2015-10-01/Single-Cell-RNASeq</id>
+   <content type="html">&lt;p&gt;layout: projects
+authors: Matahi MOARII, Elli PAPAEMMANUIL 
+title: Single Cell RNA-Seq Analysis 
+location: Memorial Sloan Kettering Cancer Center.&lt;/p&gt;
+
+&lt;h2&gt;categories: projects-2015&lt;/h2&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Pan Myeloid Stratification</title>
+   <link href="http://cbio.ensmp.fr/~mmoarii/2015-10-01/pan-myeloid-stratification.html"/>
+   <updated>2015-10-01T00:00:00-04:00</updated>
+   <id>http://cbio.ensmp.fr/~mmoarii/2015-10-01/Pan-Myeloid-Stratification</id>
+   <content type="html">&lt;p&gt;layout: projects
+authors: Matahi MOARII, Elli PAPAEMMANUIL 
+title: Pan Myeloid Stratification 
+location: Memorial Sloan Kettering Cancer Center.&lt;/p&gt;
+
+&lt;h2&gt;categories: projects-2015&lt;/h2&gt;
 </content>
  </entry>
  
