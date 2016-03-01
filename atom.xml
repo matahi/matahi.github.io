@@ -4,7 +4,7 @@
  <title></title>
  <link href="http://cbio.ensmp.fr/~mmoarii/atom.xml" rel="self"/>
  <link href="http://cbio.ensmp.fr/~mmoarii/"/>
- <updated>2015-12-12T11:55:35-05:00</updated>
+ <updated>2016-03-01T10:40:42-05:00</updated>
  <id>http://cbio.ensmp.fr/~mmoarii</id>
  <author>
    <name>Matahi MOARII</name>
@@ -62,7 +62,7 @@ location: Memorial Sloan Kettering Cancer Center.&lt;/p&gt;
    <id>http://cbio.ensmp.fr/~mmoarii/2015-07-22/CpG-Pattern-Analysis</id>
    <content type="html">&lt;h1&gt;Introduction&lt;/h1&gt;
 
-&lt;p&gt;This page contains the pipeline analysis for the &amp;quot;CpG pattern analysis&amp;quot;. Source code is available &lt;a href=&quot;code/CpG.zip&quot;&gt;here&lt;/a&gt;. The whole analysis can be computed by running the &lt;strong&gt;run_all.R&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;This page contains the pipeline analysis for the &amp;quot;CpG pattern analysis&amp;quot;. Source code is available &lt;a href=&quot;downloads/CpG_code.zip&quot;&gt;here&lt;/a&gt;. The whole analysis can be computed by running the &lt;strong&gt;run_all.R&lt;/strong&gt;&lt;/p&gt;
 
 &lt;h2&gt;Data processing&lt;/h2&gt;
 
@@ -218,7 +218,7 @@ compare_prediction_interCancer&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
    <id>http://cbio.ensmp.fr/~mmoarii/2015-07-22/CIMP-Analysis</id>
    <content type="html">&lt;h1&gt;Introduction&lt;/h1&gt;
 
-&lt;p&gt;This page contains the pipeline analysis for the &amp;quot;CIMP analysis&amp;quot;. Source code is available &lt;a href=&quot;code/CpG.zip&quot;&gt;here&lt;/a&gt;. The whole analysis can be computed by running the &lt;strong&gt;run_all.R&lt;/strong&gt; after data processing.&lt;/p&gt;
+&lt;p&gt;This page contains the pipeline analysis for the &amp;quot;CIMP analysis&amp;quot;. Source code is available &lt;a href=&quot;downloads/CIMP_code.zip&quot;&gt;here&lt;/a&gt;. The whole analysis can be computed by running the &lt;strong&gt;run_all.R&lt;/strong&gt; after data processing.&lt;/p&gt;
 
 &lt;h2&gt;Data processing&lt;/h2&gt;
 
