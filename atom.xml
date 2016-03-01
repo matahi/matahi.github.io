@@ -4,7 +4,7 @@
  <title></title>
  <link href="http://cbio.ensmp.fr/~mmoarii/atom.xml" rel="self"/>
  <link href="http://cbio.ensmp.fr/~mmoarii/"/>
- <updated>2016-03-01T13:42:28-05:00</updated>
+ <updated>2016-03-01T13:46:38-05:00</updated>
  <id>http://cbio.ensmp.fr/~mmoarii</id>
  <author>
    <name>Matahi MOARII</name>
@@ -17,7 +17,7 @@
    <link href="http://cbio.ensmp.fr/~mmoarii/2015-10-01/integrative-dna-methylation-and-gene-expression-profiles-to-assess-the-universality-of-the-cpg-island-methylator-phenotype.html"/>
    <updated>2015-10-01T00:00:00-04:00</updated>
    <id>http://cbio.ensmp.fr/~mmoarii/2015-10-01/integrative-DNA-methylation-and-gene-expression-profiles-to-assess-the-universality-of-the-CpG-island-methylator-phenotype</id>
-   <content type="html">&lt;p&gt;*Code available &lt;a href=&quot;matahi.github.io/code/CIMP.zip&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+   <content type="html">&lt;p&gt;*Code available &lt;a href=&quot;http://matahi.github.io/2015-07-22/cimp-analysis.html&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Background&lt;/em&gt; : The CpG island methylator phenotype (CIMP) was first characterized in colorectal cancer but since has been extensively studied in several other tumor types such as breast, bladder, lung, and gastric. CIMP is of clinical importance as it has been reported to be associated with prognosis or response to treatment. However, the identification of a universal molecular basis to define CIMP across tumors has remained elusive.&lt;/p&gt;
 
@@ -472,7 +472,7 @@ qplot&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;kt&quot
    <link href="http://cbio.ensmp.fr/~mmoarii/2015-05-01/changes-in-gene-expression-control-by-dna-methylation-in-cancer.html"/>
    <updated>2015-05-01T00:00:00-04:00</updated>
    <id>http://cbio.ensmp.fr/~mmoarii/2015-05-01/changes-in-gene-expression-control-by-DNA-methylation-in-cancer</id>
-   <content type="html">&lt;p&gt;*Code available &lt;a href=&quot;matahi.github.io/code/CpG.zip&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+   <content type="html">&lt;p&gt;*Supplementary code available &lt;a href=&quot;http://matahi.github.io/2015-07-22/cpg-pattern-analysis.html&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Background&lt;/em&gt; : Methylation of high-density CpG regions known as CpG Islands (CGIs) has been widely described as a mechanism associated with gene expression regulation. Aberrant promoter methylation is considered a hallmark of cancer involved in silencing of tumor suppressor genes and activation of oncogenes. However, recent studies have also challenged the simple model of gene expression control by promoter methylation in cancer, and the precise mechanism of and role played by changes in DNA methylation in carcinogenesis remains elusive.&lt;/p&gt;
 
