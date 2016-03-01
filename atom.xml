@@ -4,7 +4,7 @@
  <title></title>
  <link href="http://cbio.ensmp.fr/~mmoarii/atom.xml" rel="self"/>
  <link href="http://cbio.ensmp.fr/~mmoarii/"/>
- <updated>2016-03-01T10:40:42-05:00</updated>
+ <updated>2016-03-01T11:56:18-05:00</updated>
  <id>http://cbio.ensmp.fr/~mmoarii</id>
  <author>
    <name>Matahi MOARII</name>
@@ -31,7 +31,7 @@
    <title>Single Cell Rnaseq</title>
    <link href="http://cbio.ensmp.fr/~mmoarii/2015-10-01/single-cell-rnaseq.html"/>
    <updated>2015-10-01T00:00:00-04:00</updated>
-   <id>http://cbio.ensmp.fr/~mmoarii/2015-10-01/Single-Cell-RNASeq</id>
+   <id>http://cbio.ensmp.fr/~mmoarii/2015-10-01/single-cell-rnaseq</id>
    <content type="html">&lt;p&gt;layout: projects
 authors: Matahi MOARII, Elli PAPAEMMANUIL 
 title: Single Cell RNA-Seq Analysis 
@@ -45,7 +45,7 @@ location: Memorial Sloan Kettering Cancer Center.&lt;/p&gt;
    <title>Pan Myeloid Stratification</title>
    <link href="http://cbio.ensmp.fr/~mmoarii/2015-10-01/pan-myeloid-stratification.html"/>
    <updated>2015-10-01T00:00:00-04:00</updated>
-   <id>http://cbio.ensmp.fr/~mmoarii/2015-10-01/Pan-Myeloid-Stratification</id>
+   <id>http://cbio.ensmp.fr/~mmoarii/2015-10-01/pan-myeloid-stratification</id>
    <content type="html">&lt;p&gt;layout: projects
 authors: Matahi MOARII, Elli PAPAEMMANUIL 
 title: Pan Myeloid Stratification 
@@ -59,10 +59,10 @@ location: Memorial Sloan Kettering Cancer Center.&lt;/p&gt;
    <title>CpG Pattern analysis</title>
    <link href="http://cbio.ensmp.fr/~mmoarii/2015-07-22/cpg-pattern-analysis.html"/>
    <updated>2015-07-22T00:00:00-04:00</updated>
-   <id>http://cbio.ensmp.fr/~mmoarii/2015-07-22/CpG-Pattern-Analysis</id>
+   <id>http://cbio.ensmp.fr/~mmoarii/2015-07-22/cpg-pattern-analysis</id>
    <content type="html">&lt;h1&gt;Introduction&lt;/h1&gt;
 
-&lt;p&gt;This page contains the pipeline analysis for the &amp;quot;CpG pattern analysis&amp;quot;. Source code is available &lt;a href=&quot;downloads/CpG_code.zip&quot;&gt;here&lt;/a&gt;. The whole analysis can be computed by running the &lt;strong&gt;run_all.R&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;This page contains the pipeline analysis for the &amp;quot;CpG pattern analysis&amp;quot;. Source code is available &lt;a href=&quot;downloads/cpg-code.zip&quot;&gt;here&lt;/a&gt;. The whole analysis can be computed by running the &lt;strong&gt;run_all.R&lt;/strong&gt;&lt;/p&gt;
 
 &lt;h2&gt;Data processing&lt;/h2&gt;
 
@@ -218,7 +218,7 @@ compare_prediction_interCancer&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
    <id>http://cbio.ensmp.fr/~mmoarii/2015-07-22/CIMP-Analysis</id>
    <content type="html">&lt;h1&gt;Introduction&lt;/h1&gt;
 
-&lt;p&gt;This page contains the pipeline analysis for the &amp;quot;CIMP analysis&amp;quot;. Source code is available &lt;a href=&quot;downloads/CIMP_code.zip&quot;&gt;here&lt;/a&gt;. The whole analysis can be computed by running the &lt;strong&gt;run_all.R&lt;/strong&gt; after data processing.&lt;/p&gt;
+&lt;p&gt;This page contains the pipeline analysis for the &amp;quot;CIMP analysis&amp;quot;. Source code is available &lt;a href=&quot;downloads/cimp-code.zip&quot;&gt;here&lt;/a&gt;. The whole analysis can be computed by running the &lt;strong&gt;run_all.R&lt;/strong&gt; after data processing.&lt;/p&gt;
 
 &lt;h2&gt;Data processing&lt;/h2&gt;
 
@@ -331,7 +331,7 @@ analyze_mutations(DiseaseList, Mutation.List=Mutation.List)
    <title>bio-info, SVM and Graph-kernels</title>
    <link href="http://cbio.ensmp.fr/~mmoarii/2015-05-22/bioinfo-svm-graph-kernels.html"/>
    <updated>2015-05-22T00:00:00-04:00</updated>
-   <id>http://cbio.ensmp.fr/~mmoarii/2015-05-22/Bioinfo-SVM-Graph-Kernels</id>
+   <id>http://cbio.ensmp.fr/~mmoarii/2015-05-22/bioinfo-svm-graph-kernels</id>
    <content type="html">&lt;h1&gt;Introduction&lt;/h1&gt;
 
 &lt;p&gt;This page is the practical session of the &amp;quot;Support Vector Machines&amp;quot; module taught by &lt;a href=&quot;http://cazencott.info&quot;&gt;Chloé-Agathe Azencott&lt;/a&gt;.&lt;/p&gt;
@@ -503,7 +503,7 @@ qplot&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;kt&quot
    <title>Epigenomic alterations in breast carcinoma from primary tumor to locoregional recurrences</title>
    <link href="http://cbio.ensmp.fr/~mmoarii/2014-07-22/epigenomic-alterations.html"/>
    <updated>2014-07-22T00:00:00-04:00</updated>
-   <id>http://cbio.ensmp.fr/~mmoarii/2014-07-22/Epigenomic-alterations</id>
+   <id>http://cbio.ensmp.fr/~mmoarii/2014-07-22/epigenomic-alterations</id>
    <content type="html">&lt;h1&gt;Introduction&lt;/h1&gt;
 
 &lt;p&gt;This page contains the pipeline analysis for the article &lt;a href=&quot;link.zip&quot;&gt;Epigenomic alterations in breast carcinoma from primary tumor to locoregional recurrences&lt;/a&gt;. Source code is available &lt;a href=&quot;code/CpG.zip&quot;&gt;here&lt;/a&gt;. The whole analysis can be computed by running the &lt;strong&gt;run_all.R&lt;/strong&gt;&lt;/p&gt;
@@ -659,7 +659,7 @@ compare_prediction_interCancer&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
    <title>bio-info, SVM and Graph-kernels</title>
    <link href="http://cbio.ensmp.fr/~mmoarii/2014-05-09/bioinfo-svm-graph-kernels.html"/>
    <updated>2014-05-09T00:00:00-04:00</updated>
-   <id>http://cbio.ensmp.fr/~mmoarii/2014-05-09/Bioinfo-SVM-Graph-Kernels</id>
+   <id>http://cbio.ensmp.fr/~mmoarii/2014-05-09/bioinfo-svm-graph-kernels</id>
    <content type="html">&lt;p&gt;&lt;strong&gt;Introduction&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;This page is the practical session of the &amp;quot;Machine Learning for Computational Biology&amp;quot; module taught by &lt;a href=&quot;http://cbio.ensmp.fr/jvert&quot;&gt;Jean-Philippe Vert&lt;/a&gt;.&lt;/p&gt;
